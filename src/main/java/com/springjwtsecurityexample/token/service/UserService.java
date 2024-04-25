@@ -41,7 +41,7 @@ public class UserService {
         if (repository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
-        user.getRoles().add(RoleType.ROLE_ADMIN);
+        user.getRoles().add(RoleType.ROLE_USER);
         return save(user);
     }
 
