@@ -1,11 +1,13 @@
 package com.springjwtsecurityexample.token.service;
 
+import com.springjwtsecurityexample.token.model.JwtAuthenticationResponse;
 import com.springjwtsecurityexample.token.store.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,10 @@ import java.util.function.Function;
 
 
 @Service
+@RequiredArgsConstructor
 @Tag(name = "Jwt Token Service", description = "Все операции связанные с jwt токеном.")
 public class JwtTokenService {
+    private final UserService userService;
     @Value("${security.jwt.secret-key}")
     private String jwtSigningKey;
 
@@ -92,6 +96,19 @@ public class JwtTokenService {
     }
 
     /**
+     * обновление токена
+     * @param refreshTokenValue старый токен
+     * @return новый токен
+     */
+    public JwtAuthenticationResponse refreshToken(String refreshTokenValue) {
+        var user = userService
+                .userDetailsService()
+                .loadUserByUsername(extractUserName(refreshTokenValue));
+        var jwt =  generateToken(user);
+        return  new JwtAuthenticationResponse(jwt);
+    }
+
+    /**
      * Проверка токена на просроченность
      *
      * @param token токен
@@ -118,14 +135,13 @@ public class JwtTokenService {
      * @return данные
      */
     private Claims extractAllClaims(String token) {
-        System.out.println("extractAllClaims "+token);
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
-//todo испрвить
+
     /**
      * Получение ключа для подписи токена
      *

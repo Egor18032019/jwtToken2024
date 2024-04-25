@@ -3,9 +3,9 @@ package com.springjwtsecurityexample.token.api;
 import com.springjwtsecurityexample.token.model.JwtAuthenticationResponse;
 import com.springjwtsecurityexample.token.model.SignInRequest;
 import com.springjwtsecurityexample.token.model.SignUpRequest;
-import com.springjwtsecurityexample.token.model.TokenResponse;
+import com.springjwtsecurityexample.token.model.TokenRequest;
 import com.springjwtsecurityexample.token.service.AuthenticationService;
-import com.springjwtsecurityexample.token.service.SecurityConfiguration;
+import com.springjwtsecurityexample.token.service.JwtTokenService;
 import com.springjwtsecurityexample.token.utils.EndPoint;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication Controller", description = "Контроллер для аутентификации и регистрации пользователей")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final JwtTokenService jwtService;
 
     @Operation(summary = "Регистрация пользователя")
     @PostMapping(EndPoint.register)
@@ -41,8 +42,9 @@ public class AuthenticationController {
 
     //todo убрать
     @PostMapping(EndPoint.refresh)
-    public ResponseEntity<TokenResponse> refresh() {
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody TokenRequest request) {
+        // Проверка на валидность токена уже была произведене
         System.out.println("refresh");
-        return ResponseEntity.ok(new TokenResponse("token", "refresh"));
+        return ResponseEntity.ok(jwtService.refreshToken(request.getToken()));
     }
 }
