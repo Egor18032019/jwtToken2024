@@ -1,4 +1,4 @@
-package com.springjwtsecurityexample.token.filters;
+package com.springjwtsecurityexample.token.security;
 
 import com.springjwtsecurityexample.token.service.JwtTokenService;
 import com.springjwtsecurityexample.token.service.UserService;

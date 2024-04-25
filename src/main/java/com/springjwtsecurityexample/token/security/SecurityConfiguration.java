@@ -1,8 +1,9 @@
-package com.springjwtsecurityexample.token.service;
+package com.springjwtsecurityexample.token.security;
 
+import com.springjwtsecurityexample.token.service.UserService;
 import com.springjwtsecurityexample.token.utils.EndPoint;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import com.springjwtsecurityexample.token.filters.JwtAuthenticationFilter;
+import com.springjwtsecurityexample.token.security.JwtAuthenticationFilter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

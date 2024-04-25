@@ -40,7 +40,6 @@ public class AuthenticationController {
         return authenticationService.signIn(request);
     }
 
-    //todo убрать
     @PostMapping(EndPoint.refresh)
     public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody TokenRequest request) {
         // Проверка на валидность токена уже была произведене
