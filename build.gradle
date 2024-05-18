@@ -47,6 +47,7 @@ dependencies {
     implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.13.0'
 // https://mvnrepository.com/artifact/io.micrometer/micrometer-core
     implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.13.0'
+    testImplementation 'com.h2database:h2'
 
 }
 
