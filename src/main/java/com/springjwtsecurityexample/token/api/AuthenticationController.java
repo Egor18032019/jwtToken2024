@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Authentication Controller", description = "Контроллер для аутентификации и регистрации пользователей")
 public class AuthenticationController {
-    private final AuthenticationService authenticationService;
-    private final JwtTokenService jwtService;
+      AuthenticationService authenticationService;
+      JwtTokenService jwtService;
 
     @Operation(summary = "Регистрация пользователя")
     @PostMapping(EndPoint.register)
