@@ -10,5 +10,6 @@ public class EndPoint {
     public static final String user = "/user";
     public static final String admin = "/admin";
     public static final String example = "/example";
+    public static final String expense = "/expense";
 
 }

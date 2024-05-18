@@ -29,3 +29,4 @@ curl -i -X GET http://localhost:8080/admin
 ```shell
 curl -i -X GET http://localhost:8080/example
 ```
+ 
