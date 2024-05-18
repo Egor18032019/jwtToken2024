@@ -12,6 +12,6 @@ import lombok.Setter;
 public class Category {
     String name;
     Long money;
-        String description;
-    String limit;
+    String description;
+    Long limit;
 }

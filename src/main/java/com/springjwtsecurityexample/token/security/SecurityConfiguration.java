@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                         .requestMatchers(EndPoint.admin + "/**").hasRole("ADMIN")
                         .requestMatchers(EndPoint.example + "/**").hasAnyRole("ADMIN","USER")
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
