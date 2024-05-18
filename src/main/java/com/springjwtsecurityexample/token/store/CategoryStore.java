@@ -27,7 +27,7 @@ public class CategoryStore extends AbstractBaseEntity {
     @Column(nullable = false)
     String description;
     @Column(nullable = false)
-    String quota; //todo изменить на long
+    Long quota;
 
     public Category getCategory() {
         return new Category(this.name, this.money, this.description, this.quota);
