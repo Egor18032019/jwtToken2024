@@ -1,5 +1,7 @@
 package com.springjwtsecurityexample.token.api;
 
+import com.springjwtsecurityexample.token.model.ExpenseResponse;
+import com.springjwtsecurityexample.token.service.ExpenseService;
 import com.springjwtsecurityexample.token.utils.EndPoint;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Общая информация")
 public class ExpenseController {
-
+    ExpenseService expenseService;
     @GetMapping(EndPoint.expense)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Доступен только авторизованным пользователям с ролью USER")
-    public ResponseEntity<?> giveMeExpense() {
-
-        return ResponseEntity.ok("Admin");
+    public ResponseEntity<ExpenseResponse> giveMeAllInfo() {
+        // после того как залогонились вытасикваем данные полльзователя
+        ExpenseResponse expenseResponse = expenseService.giveMeAllInfo();
+        return ResponseEntity.ok(expenseResponse);
     }
 }
