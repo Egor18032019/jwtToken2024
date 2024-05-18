@@ -22,7 +22,6 @@ public class ExpenseService {
     public ExpenseResponse giveMeAllInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
         // тащим все данные из БД
         List<CategoryStore> allCategories = repository.findAllByUsername(username);
         //todo сделать мапер
@@ -33,7 +32,6 @@ public class ExpenseService {
     public Category changeOneCategoryAndGiveMeAllInfo(Category category) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
 //TODO  сохраняем в БД(проверки если ли и т.п.)
         CategoryStore categoryStore = repository.findAllByUsernameAndName(username, category.getName());
         categoryStore.setMoney(category.getMoney());
@@ -48,7 +46,6 @@ public class ExpenseService {
         // сохраняем в БД(проверки если ли и т.п.)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
         CategoryStore categoryStore = new CategoryStore(username, category.getName(), category.getMoney(), category.getDescription(), category.getLimit());
         repository.save(categoryStore);
         return categoryStore.getCategory();

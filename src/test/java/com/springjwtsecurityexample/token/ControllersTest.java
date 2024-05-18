@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ControllersTest {
+class ControllersTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,7 +29,7 @@ public class ControllersTest {
         SignUpRequest request = new SignUpRequest("new", "new@mail.ru", "123");
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(
-                        MockMvcRequestBuilders.post(EndPoint.api + EndPoint.auth + EndPoint.register)
+                        MockMvcRequestBuilders.post(EndPoint.API + EndPoint.AUTH + EndPoint.REGISTER)
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -43,7 +43,7 @@ public class ControllersTest {
     @Test
     void getWithoutToken() throws Exception {
         mockMvc.perform(
-                        MockMvcRequestBuilders.get(EndPoint.example)
+                        MockMvcRequestBuilders.get(EndPoint.EXAMPLE)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is4xxClientError())
@@ -56,7 +56,7 @@ public class ControllersTest {
         SignUpRequest request = new SignUpRequest("new", "new@mail.ru", "123");
         ObjectMapper objectMapper = new ObjectMapper();
         MvcResult result = mockMvc.perform(
-                        MockMvcRequestBuilders.post(EndPoint.api + EndPoint.auth + EndPoint.login)
+                        MockMvcRequestBuilders.post(EndPoint.API + EndPoint.AUTH + EndPoint.LOGIN)
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -72,7 +72,7 @@ public class ControllersTest {
         String token = response.replace("\"}", "");
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.get(EndPoint.example)
+                        MockMvcRequestBuilders.get(EndPoint.EXAMPLE)
                                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                                 .accept(MediaType.APPLICATION_JSON)
                 )

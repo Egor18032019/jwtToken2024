@@ -2,8 +2,6 @@ package com.springjwtsecurityexample.token.security;
 
 import com.springjwtsecurityexample.token.service.UserService;
 import com.springjwtsecurityexample.token.utils.EndPoint;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import com.springjwtsecurityexample.token.security.JwtAuthenticationFilter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,9 +50,9 @@ public class SecurityConfiguration {
                 // Настройка доступа к конечным точкам
                 .authorizeHttpRequests(request -> request
                         // Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
-                        .requestMatchers(EndPoint.api + EndPoint.auth + "/**").permitAll()
-                        .requestMatchers(EndPoint.admin + "/**").hasRole("ADMIN")
-                        .requestMatchers(EndPoint.example + "/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(EndPoint.API + EndPoint.AUTH + "/**").permitAll()
+                        .requestMatchers(EndPoint.ADMIN + "/**").hasRole("ADMIN")
+                        .requestMatchers(EndPoint.EXAMPLE + "/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
