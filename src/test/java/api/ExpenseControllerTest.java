@@ -30,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = TokenApplication.class)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class ExpenseControllerTest {
  
 
@@ -71,7 +69,7 @@ public class ExpenseControllerTest {
                 .andExpect(jsonPath("$.categories[0].name", is("Name")))
                 .andExpect(jsonPath("$.categories[0].money", is(100)))
                 .andExpect(jsonPath("$.categories[0].description", is("Desc")))
-                .andExpect(jsonPath("$.categories[0].limit", is("")));
+                .andExpect(jsonPath("$.categories[0].limit", is(0)));
     }
 
     @Test
@@ -97,13 +95,13 @@ public class ExpenseControllerTest {
                 .andExpect(jsonPath("$.name").value("NewName"))
                 .andExpect(jsonPath("$.money").value(200))
                 .andExpect(jsonPath("$.description").value("NewDesc"))
-                .andExpect(jsonPath("$.limit").value(""));
+                .andExpect(jsonPath("$.limit").value(0));
     }
 
     @Test
     @WithAnonymousUser
     void whenAddOneCategoryWithAnonymousUserThenResponseIsForbidden() throws Exception {
-        Category category = new Category("NewName", 200L, "NewDesc", "");
+        Category category = new Category("NewName", 200L, "NewDesc", 0L);
 
         mockMvc.perform(post("/api/expense")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,14 +125,14 @@ public class ExpenseControllerTest {
                 .andExpect(jsonPath("$.name").value("NewName"))
                 .andExpect(jsonPath("$.money").value(200))
                 .andExpect(jsonPath("$.description").value("NewDesc"))
-                .andExpect(jsonPath("$.limit").value(""));
+                .andExpect(jsonPath("$.limit").value(0));
     }
 
 
     @Test
     @WithAnonymousUser
     void whenChangeOneCategoryWithAnonymousUserThenResponseIsForbidden() throws Exception {
-        Category category = new Category("NewName", 200L, "NewDesc", "");
+        Category category = new Category("NewName", 200L, "NewDesc", 0L);
 
         mockMvc.perform(put("/api/expense")
                         .contentType(MediaType.APPLICATION_JSON)
