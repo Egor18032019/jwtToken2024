@@ -4,18 +4,19 @@ import com.springjwtsecurityexample.token.TokenApplication;
 import com.springjwtsecurityexample.token.model.Category;
 import com.springjwtsecurityexample.token.model.ExpenseResponse;
 import com.springjwtsecurityexample.token.service.ExpenseService;
+import com.springjwtsecurityexample.token.store.CategoryRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import util.JsonConverter;
 
 import java.util.List;
@@ -28,25 +29,35 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TokenApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+public class ExpenseControllerTest {
+ 
 
-class ExpenseControllerTest {
-
-    @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private ExpenseService expenseService;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private ExpenseResponse expenseResponse;
 
     @BeforeEach
     void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         expenseResponse = new ExpenseResponse();
         expenseResponse.setCategories(List.of(new Category("Name", 100L, "Desc", 0L)));
+    }
+
+    @AfterEach
+    void clean() {
+        categoryRepository.deleteAll();
     }
 
     @Test
@@ -64,9 +75,11 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void whenGiveMeAllInfoWithoutUserThenResponseIsForbidden() throws Exception {
+    @WithAnonymousUser
+    void whenGiveMeAllInfoWithAnonymousUserThenResponseIsForbidden() throws Exception {
         mockMvc.perform(get("/api/expense"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 
     @Test
@@ -88,6 +101,18 @@ class ExpenseControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
+    void whenAddOneCategoryWithAnonymousUserThenResponseIsForbidden() throws Exception {
+        Category category = new Category("NewName", 200L, "NewDesc", "");
+
+        mockMvc.perform(post("/api/expense")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonConverter.asJsonString(category)))
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
     @WithMockUser(roles = "USER")
     void whenChangeOneCategoryUsingUserThenResponseIsOk() throws Exception {
         Category category = new Category("NewName", 200L, "NewDesc", 0L);
@@ -103,5 +128,18 @@ class ExpenseControllerTest {
                 .andExpect(jsonPath("$.money").value(200))
                 .andExpect(jsonPath("$.description").value("NewDesc"))
                 .andExpect(jsonPath("$.limit").value(""));
+    }
+
+
+    @Test
+    @WithAnonymousUser
+    void whenChangeOneCategoryWithAnonymousUserThenResponseIsForbidden() throws Exception {
+        Category category = new Category("NewName", 200L, "NewDesc", "");
+
+        mockMvc.perform(put("/api/expense")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonConverter.asJsonString(category)))
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 }
