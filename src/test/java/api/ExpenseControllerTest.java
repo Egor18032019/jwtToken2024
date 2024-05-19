@@ -30,7 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = TokenApplication.class)
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ExpenseControllerTest {
+ 
 
     private MockMvc mockMvc;
 
@@ -49,7 +52,7 @@ public class ExpenseControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         expenseResponse = new ExpenseResponse();
-        expenseResponse.setCategories(List.of(new Category("Name", 100L, "Desc", "")));
+        expenseResponse.setCategories(List.of(new Category("Name", 100L, "Desc", 0L)));
     }
 
     @AfterEach
@@ -82,7 +85,7 @@ public class ExpenseControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void whenAddOneCategoryUsingUserThenResponseIsOk() throws Exception {
-        Category category = new Category("NewName", 200L, "NewDesc", "");
+        Category category = new Category("NewName", 200L, "NewDesc", 0L);
 
         when(expenseService.addOneCategoryAndGiveMeCategory(any()))
                 .thenReturn(category);
@@ -112,7 +115,7 @@ public class ExpenseControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void whenChangeOneCategoryUsingUserThenResponseIsOk() throws Exception {
-        Category category = new Category("NewName", 200L, "NewDesc", "");
+        Category category = new Category("NewName", 200L, "NewDesc", 0L);
 
         when(expenseService.changeOneCategoryAndGiveMeAllInfo(any()))
                 .thenReturn(category);
