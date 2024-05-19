@@ -1,12 +1,11 @@
 package com.springjwtsecurityexample.token.store;
 
-import com.springjwtsecurityexample.token.model.Category;
+import com.springjwtsecurityexample.token.store.base.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 
@@ -16,12 +15,10 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Expense {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Expense extends AbstractBaseEntity {
+    @Column(nullable = false)
     private double amount;
+    @Column(nullable = false)
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +27,6 @@ public class Expense {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    private Category category;
+    private CategoryStore category;
 
 }
