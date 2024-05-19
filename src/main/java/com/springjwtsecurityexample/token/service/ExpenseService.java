@@ -2,8 +2,10 @@ package com.springjwtsecurityexample.token.service;
 
 import com.springjwtsecurityexample.token.model.Category;
 import com.springjwtsecurityexample.token.model.ExpenseResponse;
+import com.springjwtsecurityexample.token.repository.ExpenseRepository;
 import com.springjwtsecurityexample.token.store.CategoryRepository;
 import com.springjwtsecurityexample.token.store.CategoryStore;
+import com.springjwtsecurityexample.token.store.Expense;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +21,11 @@ import java.util.List;
 public class ExpenseService {
 
     private final CategoryRepository repository;
+    private final ExpenseRepository expenseRepository;
 
     public ExpenseResponse giveMeAllInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
         // тащим все данные из БД
         List<CategoryStore> allCategories = repository.findAllByUsername(username);
         //todo сделать мапер
@@ -33,7 +36,6 @@ public class ExpenseService {
     public Category changeOneCategoryAndGiveMeAllInfo(Category category) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
 //TODO  сохраняем в БД(проверки если ли и т.п.)
         CategoryStore categoryStore = repository.findAllByUsernameAndName(username, category.getName());
         categoryStore.setMoney(category.getMoney());
@@ -48,9 +50,35 @@ public class ExpenseService {
         // сохраняем в БД(проверки если ли и т.п.)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // получаем имя пользователя
-        System.out.println(username + "username");
         CategoryStore categoryStore = new CategoryStore(username, category.getName(), category.getMoney(), category.getDescription(), category.getLimit());
         repository.save(categoryStore);
         return categoryStore.getCategory();
+    }
+
+    public Expense createExpense(Expense expense) {
+        return expenseRepository.save(expense);
+    }
+
+    public List<Expense> getAllExpenses() {
+        return expenseRepository.findAll();
+    }
+
+    public Optional<Expense> getExpenseById(Long id) {
+        return expenseRepository.findById(id);
+    }
+
+    public Expense updateExpense(Long id, Expense expenseDetails) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+
+        expense.setAmount(expenseDetails.getAmount());
+        expense.setDate(expenseDetails.getDate());
+        expense.setCategory(expenseDetails.getCategory());
+        expense.setUser(expenseDetails.getUser());
+        return expenseRepository.save(expense);
+    }
+
+    public void deleteExpense(Long id) {
+        expenseRepository.deleteById(id);
     }
 }

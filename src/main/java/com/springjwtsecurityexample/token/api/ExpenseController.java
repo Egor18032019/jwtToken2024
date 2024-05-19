@@ -14,14 +14,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(EndPoint.api)
+@RequestMapping(EndPoint.API)
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Общая информация")
 public class ExpenseController {
     ExpenseService expenseService;
 
-    @GetMapping(EndPoint.expense)
+    @GetMapping(EndPoint.EXPENSE)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Получаем данные пользователя")
     public ResponseEntity<ExpenseResponse> giveMeAllInfo() {
@@ -30,7 +30,7 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseResponse);
     }
 
-    @PutMapping(EndPoint.expense)
+    @PutMapping(EndPoint.EXPENSE)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Изменяем одну категорию")
     public ResponseEntity<Category> changeOneCategory(Category category) {
@@ -41,7 +41,7 @@ public class ExpenseController {
         return ResponseEntity.ok(categoryAfterSave);
     }
 
-    @PostMapping(EndPoint.expense)
+    @PostMapping(EndPoint.EXPENSE)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Добавляем одну категорию")
     public ResponseEntity<Category> addOneCategory(Category category) {

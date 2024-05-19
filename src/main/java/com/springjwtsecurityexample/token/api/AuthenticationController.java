@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = EndPoint.api + EndPoint.auth)
+@RequestMapping(value = EndPoint.API + EndPoint.AUTH)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Authentication Controller", description = "Контроллер для аутентификации и регистрации пользователей")
 public class AuthenticationController {
@@ -29,21 +29,20 @@ public class AuthenticationController {
       JwtTokenService jwtService;
 
     @Operation(summary = "Регистрация пользователя")
-    @PostMapping(EndPoint.register)
+    @PostMapping(EndPoint.REGISTER)
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
         return authenticationService.signUp(request);
     }
 
     @Operation(summary = "Авторизация пользователя")
-    @PostMapping(EndPoint.login)
+    @PostMapping(EndPoint.LOGIN)
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);
     }
 
-    @PostMapping(EndPoint.refresh)
+    @PostMapping(EndPoint.REFRESH)
     public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody TokenRequest request) {
         // Проверка на валидность токена уже была произведене
-        System.out.println("refresh");
         return ResponseEntity.ok(jwtService.refreshToken(request.getToken()));
     }
 }
